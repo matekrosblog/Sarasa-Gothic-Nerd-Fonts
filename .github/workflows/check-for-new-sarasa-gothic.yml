@@ -1,0 +1,30 @@
+name: Create tag if there's a new Sarasa Gothic version
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+
+jobs:
+  build:
+    if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Magic 😎
+        run: |
+          # Find the latest tag
+          LATEST_TAG=`curl --silent "https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest" | jq -r .tag_name`
+          echo "Latest tag of be5invis/Sarasa-Gothic is ${LATEST_TAG}"
+
+          # Check if we already have a matching tag
+          if git rev-parse "$LATEST_TAG" >/dev/null 2>&1; then
+            echo "${LATEST_TAG} tag exists, do nothing.";
+          else
+            echo "${LATEST_TAG} tag does not exist, tag it to trigger next action."
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git tag -a ${LATEST_TAG} -m "🎉 build: release version ${LATEST_TAG}"
+            git push origin --tags
+          fi

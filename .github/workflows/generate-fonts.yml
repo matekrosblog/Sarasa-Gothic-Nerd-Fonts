@@ -4,81 +4,38 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
+    runs-on: ubuntu-20.04
     env:
-      NERDFONTVERS: v2.1.0
+      NERD_FONTS_VERSION: v2.1.0
     steps:
-    - uses: actions/checkout@v1
-    - name: Download latest version of Cascadia
-      run: |
-        CASCADIAVERS=`curl -L 'https://github.com/microsoft/cascadia-code/releases/latest' | grep CascadiaCode | sed 's!\(.*/microsoft/cascadia-code/releases/download/\([^"]*\).*\|.*span.*\)!\2!'`
-        echo Downloading ${CASCADIAVERS}
-        curl -L https://github.com/microsoft/cascadia-code/releases/download/${CASCADIAVERS}  -O
-        unzip CascadiaCode*.zip
-    - name: Install FontForge
-      run: |
-        sudo add-apt-repository ppa:fontforge/fontforge -y -u;
-        sudo apt-get install fontforge -y;
-    - name: Download Font Patcher
-      run: curl -L https://raw.githubusercontent.com/ryanoasis/nerd-fonts/${NERDFONTVERS}/font-patcher --output font-patcher
-    - name: Download source fonts
-      run: |
-        chmod +x download-source-fonts.sh
-        ./download-source-fonts.sh
-    - name: Install PIP
-      run: sudo apt install python-pip -y
-    - name: Install configparser
-      run: pip install configparser
-    - name: Extract additional powerline glyphs
-      run: fontforge -lang=ff -script extract-extra-glyphs
-    - name: Prepare Caskadia Code font file
-      run: fontforge prepare-font --input **/CascadiaCodePL.ttf --output CascadiaCodePL.ttf
-    - name: Build Powerline
-      run: |
-        fontforge -script font-patcher --careful --powerline --custom SomeExtraSymbols.otf \
-                                       --no-progressbars --mono Cascadia*.ttf | tee process.log
-        git describe --always --tags | xargs fontforge rename-font --input Cas*\ Nerd\ Font\ Mono.ttf \
-                                                            --output "Delugia Nerd Font.ttf" \
-                                                            --name "Delugia Nerd Font" \
-                                                            --version
-    - name: Build Complete
-      run: |
-        fontforge -script font-patcher --careful -c --custom SomeExtraSymbols.otf \
-                                       --no-progressbars --mono Cascadia*.ttf | tee process_full.log
-        git describe --always --tags | xargs fontforge rename-font --input Cas*\ Nerd\ Font\ Complete\ Mono.ttf \
-                                                            --output "Delugia Nerd Font Complete.ttf" \
-                                                            --name "Delugia Nerd Font" \
-                                                            --version
-    - name: Build Book Complete
-      run: |
-        fontforge -script font-patcher --careful -c --custom SomeExtraSymbols.otf \
-                                       --no-progressbars Cascadia*.ttf | tee process_book.log
-        git describe --always --tags | xargs fontforge rename-font --input Cas*\ Nerd\ Font\ Complete.ttf \
-                                                            --output "Delugia Nerd Font Book.ttf" \
-                                                            --name "Delugia Nerd Font Book" \
-                                                            --version
-    - name: Check for preexisting glyphs
-      run: |
-        grep 'Found existing' process*.log
-    - uses: actions/upload-artifact@master
-      with:
-        name: Delugia Nerd Font Powerline
-        path: "Delugia Nerd Font.ttf"
-    - uses: actions/upload-artifact@master
-      with:
-        name: Delugia Nerd Font Complete
-        path: "Delugia Nerd Font Complete.ttf"
-    - uses: actions/upload-artifact@master
-      with:
-        name: Delugia Nerd Font Book
-        path: "Delugia Nerd Font Book.ttf"
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: |
-          Delugia Nerd Font.ttf
-          Delugia Nerd Font Complete.ttf
-          Delugia Nerd Font Book.ttf
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Download latest version of Sarasa Gothic
+        run: |
+          LATEST_TAG=`curl --silent "https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest" | jq -r .tag_name`
+          echo Downloading Sarasa Gothic ${LATEST_TAG}
+          curl -L https://github.com/be5invis/Sarasa-Gothic/releases/download/${LATEST_TAG}/sarasa-gothic-ttf-${LATEST_TAG:1}.7z -O
+          7z x *.7z
+      - name: Install FontForge
+        run: sudo apt install fontforge -y
+      - name: Download Font Patcher
+        run: curl -L https://raw.githubusercontent.com/ryanoasis/nerd-fonts/${NERD_FONTS_VERSION}/font-patcher --output font-patcher
+      - name: Download source fonts
+        run: sh download-source-fonts.sh
+      - name: Install configparser
+        run: pip install configparser
+      - name: Patch fonts
+        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet sarasa-mono-tc-regular.ttf
+      - name: Rename patched font file
+        run: mv 'Sarasa Mono TC Nerd Font Complete.ttf' Sarasa-Mono-TC-Nerd-Font-Complete.ttf
+      - uses: actions/upload-artifact@master
+        with:
+          name: Sarasa Mono TC Nerd Font Complete
+          path: Sarasa-Mono-TC-Nerd-Font-Complete.ttf
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: Sarasa-Mono-TC-Nerd-Font-Complete.ttf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
