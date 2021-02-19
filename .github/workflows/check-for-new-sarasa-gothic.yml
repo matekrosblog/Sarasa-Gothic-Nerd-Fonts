@@ -3,6 +3,7 @@ name: Create tag if there's a new Sarasa Gothic version
 on:
   schedule:
     - cron: "0 12 * * *"
+  workflow_dispatch:
 
 jobs:
   build:
