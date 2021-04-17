@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       NERD_FONTS_VERSION: v2.1.0
     steps:

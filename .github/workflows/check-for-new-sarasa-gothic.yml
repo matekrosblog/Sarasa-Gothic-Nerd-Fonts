@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
