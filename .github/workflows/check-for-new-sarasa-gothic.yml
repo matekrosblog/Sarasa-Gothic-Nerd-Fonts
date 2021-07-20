@@ -19,14 +19,14 @@ jobs:
       - name: Magic 😎
         run: |
           # Find the latest tag
-          LATEST_TAG=`curl --silent "https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest" | jq -r .tag_name`
-          echo "Latest tag of be5invis/Sarasa-Gothic is ${LATEST_TAG}"
+          LATEST_TAG=$(curl --silent https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r .tag_name)
+          echo Latest tag of be5invis/Sarasa-Gothic is ${LATEST_TAG}
 
           # Check if we already have a matching tag
-          if git rev-parse "$LATEST_TAG" >/dev/null 2>&1; then
-            echo "${LATEST_TAG} tag exists, do nothing.";
+          if git rev-parse ${LATEST_TAG} >/dev/null 2>&1; then
+            echo ${LATEST_TAG} tag exists, do nothing.
           else
-            echo "${LATEST_TAG} tag does not exist, tag it to trigger next action."
+            echo ${LATEST_TAG} tag does not exist, tag it to trigger next action.
             git config user.name github-actions
             git config user.email github-actions@github.com
             git tag -a ${LATEST_TAG} -m "🎉 build: release version ${LATEST_TAG}"

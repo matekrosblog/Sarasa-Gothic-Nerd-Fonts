@@ -1,0 +1,29 @@
+{
+  "version": "0.32.11",
+  "description": "Nerd Fonts patched Sarasa Mono TC",
+  "homepage": "https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font",
+  "license": "OFL-1.1",
+  "url": "https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/download/v0.32.11/Sarasa-Mono-TC-Nerd-Font-Complete.ttf",
+  "hash": "f8960090ab5724cdac0c62872d10b5351d23b7b9b96bb4cf45971d55ee3c3ec3",
+  "installer": {
+    "script": [
+      "New-Item $HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts -ItemType Directory -ErrorAction SilentlyContinue",
+      "Get-ChildItem $dir -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "  Copy-Item $_.FullName -destination \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\"",
+      "  Get-ChildItem \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\" -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "    Write-Host $_.FullName",
+      "    New-ItemProperty -Path 'HKCU:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts' -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Value $_.FullName -Force | Out-Null",
+      "  }",
+      "}"
+    ]
+  },
+  "uninstaller": {
+    "script": [
+      "Get-ChildItem $dir -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "  Remove-ItemProperty -Path 'HKCU:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts' -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Force -ErrorAction SilentlyContinue",
+      "  Remove-Item \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\\$($_.Name)\" -Force -ErrorAction SilentlyContinue",
+      "}",
+      "Write-Host \"The 'Sarasa Mono TC Nerd Font' has been uninstalled and will not be present after restarting your computer.\" -Foreground Magenta"
+    ]
+  }
+}
