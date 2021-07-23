@@ -18,6 +18,15 @@
   },
   "uninstaller": {
     "script": [
+      "Get-ChildItem \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\" -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "  try {",
+      "    Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop",
+      "  } catch {",
+      "    error \"$app is being used by another process.\"",
+      "    error \"Please close all applications (e.g. vscode) that are using $app before upgrade/uninstall.\"",
+      "    exit 1",
+      "  }",
+      "}",
       "Get-ChildItem $dir -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
       "  Remove-ItemProperty -Path 'HKCU:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts' -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Force -ErrorAction SilentlyContinue",
       "  Remove-Item \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\\$($_.Name)\" -Force -ErrorAction SilentlyContinue",
