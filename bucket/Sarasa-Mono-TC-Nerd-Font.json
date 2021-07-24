@@ -7,18 +7,25 @@
   "hash": "cf5c3214cfc033a60e28e90c29f9ba073fc20a7ca4f187d3e7017b3720d5373a",
   "installer": {
     "script": [
-      "New-Item $HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts -ItemType Directory -ErrorAction SilentlyContinue",
-      "Get-ChildItem $dir -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
-      "  Copy-Item $_.FullName -destination \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\"",
-      "  Get-ChildItem \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\" -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
-      "    New-ItemProperty -Path 'HKCU:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts' -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Value $_.FullName -Force | Out-Null",
-      "  }",
+      "$fontDir = if ($global) { \"${env:windir}\\Fonts\" } else { \"${HOME}\\AppData\\Local\\Microsoft\\Windows\\Fonts\" }",
+      "$root = if ($global) { \"HKLM\" } else { \"HKCU\" }",
+      "if (-Not $global) {",
+      "  New-Item \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\" -ItemType Directory -ErrorAction SilentlyContinue",
+      "}",
+      "Get-ChildItem $dir -Filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "  Copy-Item $_.FullName -destination $fontDir",
+      "}",
+      "Get-ChildItem $fontDir -Filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "  $value = if ($global) { $_.Name } else { $_.FullName }",
+      "  New-ItemProperty -Path \"${root}:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\" -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Value $value -Force | Out-Null",
       "}"
     ]
   },
   "uninstaller": {
     "script": [
-      "Get-ChildItem \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\" -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "$fontDir = if ($global) { \"${env:windir}\\Fonts\" } else { \"${HOME}\\AppData\\Local\\Microsoft\\Windows\\Fonts\" }",
+      "$root = if ($global) { \"HKLM\" } else { \"HKCU\" }",
+      "Get-ChildItem $fontDir -Filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
       "  try {",
       "    Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop",
       "  } catch {",
@@ -27,9 +34,9 @@
       "    exit 1",
       "  }",
       "}",
-      "Get-ChildItem $dir -filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
-      "  Remove-ItemProperty -Path 'HKCU:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts' -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Force -ErrorAction SilentlyContinue",
-      "  Remove-Item \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\\$($_.Name)\" -Force -ErrorAction SilentlyContinue",
+      "Get-ChildItem $dir -Filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "  Remove-ItemProperty -Path \"${root}:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\" -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Force -ErrorAction SilentlyContinue",
+      "  Remove-Item \"${fontDir}\\$($_.Name)\" -Force -ErrorAction SilentlyContinue",
       "}",
       "Write-Host \"The 'Sarasa Mono TC Nerd Font' has been uninstalled and will not be present after restarting your computer.\" -Foreground Magenta"
     ]
