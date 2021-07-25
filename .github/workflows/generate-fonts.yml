@@ -28,13 +28,25 @@ jobs:
       - name: Install configparser
         run: pip install configparser
       - name: Patch fonts
-        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet sarasa-mono-tc-regular.ttf
-      - name: Rename patched font file
-        run: mv 'Sarasa Mono TC Nerd Font Complete.ttf' Sarasa-Mono-TC-Nerd-Font-Complete.ttf
+        run: ls -1 sarasa-mono-tc-*.ttf | xargs -I {} fontforge -script font-patcher --careful --complete --no-progressbars --quiet {}
+      - name: Rename patched font files
+        run: |
+          mv 'Sarasa Mono TC Bold Italic Nerd Font Complete.ttf'     sarasa-mono-tc-bolditalic-nerd-font.ttf
+          mv 'Sarasa Mono TC Bold Nerd Font Complete.ttf'            sarasa-mono-tc-bold-nerd-font.ttf
+          mv 'Sarasa Mono TC Italic Nerd Font Complete.ttf'          sarasa-mono-tc-italic-nerd-font.ttf
+          mv 'Sarasa Mono TC Light Italic Nerd Font Complete.ttf'    sarasa-mono-tc-lightitalic-nerd-font.ttf
+          mv 'Sarasa Mono TC Light Nerd Font Complete.ttf'           sarasa-mono-tc-light-nerd-font.ttf
+          mv 'Sarasa Mono TC Nerd Font Complete.ttf'                 sarasa-mono-tc-regular-nerd-font.ttf
+          mv 'Sarasa Mono TC Semibold Italic Nerd Font Complete.ttf' sarasa-mono-tc-semibolditalic-nerd-font.ttf
+          mv 'Sarasa Mono TC Semibold Nerd Font Complete.ttf'        sarasa-mono-tc-semibold-nerd-font.ttf
+          mv 'Sarasa Mono TC Xlight Italic Nerd Font Complete.ttf'   sarasa-mono-tc-extralightitalic-nerd-font.ttf
+          mv 'Sarasa Mono TC Xlight Nerd Font Complete.ttf'          sarasa-mono-tc-extralight-nerd-font.ttf
+      - name: Zip patched font files
+        run: zip -r sarasa-mono-tc-nerd-font.zip sarasa-mono-tc-*-nerd-font.ttf
       - uses: actions/upload-artifact@master
         with:
-          name: Sarasa Mono TC Nerd Font Complete
-          path: Sarasa-Mono-TC-Nerd-Font-Complete.ttf
+          name: Sarasa Mono TC Nerd Font
+          path: sarasa-mono-tc-nerd-font.zip
 
   release:
     needs: build
@@ -43,13 +55,12 @@ jobs:
     steps:
       - uses: actions/download-artifact@master
         with:
-          name: Sarasa Mono TC Nerd Font Complete
-      - run: pwd
+          name: Sarasa Mono TC Nerd Font
       - run: ls -al
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: Sarasa-Mono-TC-Nerd-Font-Complete.ttf
+          files: sarasa-mono-tc-nerd-font.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -63,18 +74,18 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
-      - name: Download latest Sarasa-Mono-TC-Nerd-Font-Complete.ttf
+      - name: Download latest sarasa-mono-tc-nerd-font.zip
         run: |
           LATEST_TAG=$(curl --silent https://api.github.com/repos/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/latest | jq -r .tag_name)
-          echo Downloading Sarasa Gothic ${LATEST_TAG}
-          curl -L -O https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/download/${LATEST_TAG}/Sarasa-Mono-TC-Nerd-Font-Complete.ttf
+          echo "Downloading sarasa-mono-tc-nerd-font.zip (tag ${LATEST_TAG})"
+          curl -L -O https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/download/${LATEST_TAG}/sarasa-mono-tc-nerd-font.zip
           echo ${LATEST_TAG:1} > VERSION
       - name: update scoop bucket
         run: |
           OLD_VERSION=$(jq -r '.version' bucket/Sarasa-Mono-TC-Nerd-Font.json)
           NEW_VERSION=$(cat VERSION)
           OLD_HASH=$(jq -r '.hash' bucket/Sarasa-Mono-TC-Nerd-Font.json)
-          NEW_HASH=$(sha256sum Sarasa-Mono-TC-Nerd-Font-Complete.ttf | head -c 64)
+          NEW_HASH=$(sha256sum sarasa-mono-tc-nerd-font.zip | head -c 64)
           sed -i "s/${OLD_VERSION}/${NEW_VERSION}/g" bucket/Sarasa-Mono-TC-Nerd-Font.json
           sed -i "s/${OLD_HASH}/${NEW_HASH}/g" bucket/Sarasa-Mono-TC-Nerd-Font.json
           git config user.name github-actions

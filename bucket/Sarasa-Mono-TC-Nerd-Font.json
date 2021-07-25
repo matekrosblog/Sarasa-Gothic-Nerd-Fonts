@@ -3,7 +3,7 @@
   "description": "Nerd Fonts patched Sarasa Mono TC",
   "homepage": "https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font",
   "license": "OFL-1.1",
-  "url": "https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/download/v0.32.13/Sarasa-Mono-TC-Nerd-Font-Complete.ttf",
+  "url": "https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/download/v0.32.13/sarasa-mono-tc-nerd-font.zip",
   "hash": "cf5c3214cfc033a60e28e90c29f9ba073fc20a7ca4f187d3e7017b3720d5373a",
   "installer": {
     "script": [
@@ -12,10 +12,10 @@
       "if (-Not $global) {",
       "  New-Item \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\" -ItemType Directory -ErrorAction SilentlyContinue",
       "}",
-      "Get-ChildItem $dir -Filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "Get-ChildItem $dir -Filter 'sarasa-mono-tc-*-nerd-font.ttf' | ForEach-Object {",
       "  Copy-Item $_.FullName -destination $fontDir",
       "}",
-      "Get-ChildItem $fontDir -Filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "Get-ChildItem $fontDir -Filter 'sarasa-mono-tc-*-nerd-font.ttf' | ForEach-Object {",
       "  $value = if ($global) { $_.Name } else { $_.FullName }",
       "  New-ItemProperty -Path \"${root}:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\" -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Value $value -Force | Out-Null",
       "}"
@@ -25,7 +25,7 @@
     "script": [
       "$fontDir = if ($global) { \"${env:windir}\\Fonts\" } else { \"${HOME}\\AppData\\Local\\Microsoft\\Windows\\Fonts\" }",
       "$root = if ($global) { \"HKLM\" } else { \"HKCU\" }",
-      "Get-ChildItem $fontDir -Filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "Get-ChildItem $fontDir -Filter 'sarasa-mono-tc-*-nerd-font.ttf' | ForEach-Object {",
       "  try {",
       "    Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop",
       "  } catch {",
@@ -34,7 +34,7 @@
       "    exit 1",
       "  }",
       "}",
-      "Get-ChildItem $dir -Filter 'Sarasa-Mono-TC-Nerd-Font-Complete.ttf' | ForEach-Object {",
+      "Get-ChildItem $dir -Filter 'sarasa-mono-tc-*-nerd-font.ttf' | ForEach-Object {",
       "  Remove-ItemProperty -Path \"${root}:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\" -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Force -ErrorAction SilentlyContinue",
       "  Remove-Item \"${fontDir}\\$($_.Name)\" -Force -ErrorAction SilentlyContinue",
       "}",
