@@ -7,13 +7,16 @@
   "hash": "da69ea8ce9476b533ee76deac53dfad53f6c46e6f9151a7424c720b1f074ba2e",
   "installer": {
     "script": [
+      "$fontList = \"${dir}\\list.txt\"",
       "$fontDir = if ($global) { \"${env:windir}\\Fonts\" } else { \"${HOME}\\AppData\\Local\\Microsoft\\Windows\\Fonts\" }",
       "$root = if ($global) { \"HKLM\" } else { \"HKCU\" }",
       "if (-Not $global) {",
       "  New-Item $fontDir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null",
       "}",
+      "New-Item $fontList | Out-Null",
       "Get-ChildItem $dir -Filter '*.ttf' | ForEach-Object {",
-      "  Copy-Item $_.FullName -destination $fontDir",
+      "  Add-Content $fontList -Encoding utf8 -Value $_.Name",
+      "  Move-Item $_.FullName -Destination $fontDir",
       "  Get-ChildItem $fontDir -Filter $_.Name | ForEach-Object {",
       "    $value = if ($global) { $_.Name } else { $_.FullName }",
       "    New-ItemProperty -Path \"${root}:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\" -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Value $value -Force | Out-Null",
@@ -23,10 +26,11 @@
   },
   "uninstaller": {
     "script": [
+      "$fontList = \"${dir}\\list.txt\"",
       "$fontDir = if ($global) { \"${env:windir}\\Fonts\" } else { \"${HOME}\\AppData\\Local\\Microsoft\\Windows\\Fonts\" }",
       "$root = if ($global) { \"HKLM\" } else { \"HKCU\" }",
-      "Get-ChildItem $dir -Filter '*.ttf' | ForEach-Object {",
-      "  Get-ChildItem $fontDir -Filter $_.Name | ForEach-Object {",
+      "Get-Content $fontList | ForEach-Object {",
+      "  Get-ChildItem $fontDir -Filter $_ | ForEach-Object {",
       "    try {",
       "      Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop",
       "    } catch {",
@@ -36,9 +40,11 @@
       "    }",
       "  }",
       "}",
-      "Get-ChildItem $dir -Filter '*.ttf' | ForEach-Object {",
-      "  Remove-ItemProperty -Path \"${root}:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\" -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Force -ErrorAction SilentlyContinue",
-      "  Remove-Item \"${fontDir}\\$($_.Name)\" -Force -ErrorAction SilentlyContinue",
+      "Get-Content $fontList | ForEach-Object {",
+      "  Get-ChildItem $fontDir -Filter $_ | ForEach-Object {",
+      "    Remove-ItemProperty -Path \"${root}:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\" -Name $_.Name.Replace($_.Extension, ' (TrueType)') -Force -ErrorAction SilentlyContinue",
+      "    Remove-Item \"${fontDir}\\$($_.Name)\" -Force -ErrorAction SilentlyContinue",
+      "  }",
       "}",
       "Write-Host \"The 'Sarasa Mono TC Nerd Font' has been uninstalled and will not be present after restarting your computer.\" -Foreground Magenta"
     ]
