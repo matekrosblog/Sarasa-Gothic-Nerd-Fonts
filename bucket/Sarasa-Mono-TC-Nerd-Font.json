@@ -10,7 +10,7 @@
       "$fontDir = if ($global) { \"${env:windir}\\Fonts\" } else { \"${HOME}\\AppData\\Local\\Microsoft\\Windows\\Fonts\" }",
       "$root = if ($global) { \"HKLM\" } else { \"HKCU\" }",
       "if (-Not $global) {",
-      "  New-Item \"$HOME\\AppData\\Local\\Microsoft\\Windows\\Fonts\" -ItemType Directory -ErrorAction SilentlyContinue",
+      "  New-Item $fontDir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null",
       "}",
       "Get-ChildItem $dir -Filter '*.ttf' | ForEach-Object {",
       "  Copy-Item $_.FullName -destination $fontDir",
