@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - v*.*.*
+  # allow manually trigger (for manually testing purpose)
+  workflow_dispatch:
 
 jobs:
   build:
