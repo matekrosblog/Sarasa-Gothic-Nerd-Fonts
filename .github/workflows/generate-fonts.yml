@@ -8,19 +8,52 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  prepare:
     if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
     runs-on: ubuntu-latest
+    steps:
+      - name: Download latest version of Sarasa Gothic from GitHub release page
+        run: |
+          LATEST_TAG=$(curl --silent https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r .tag_name)
+          echo Downloading Sarasa Gothic ${LATEST_TAG}
+          curl -L https://github.com/be5invis/Sarasa-Gothic/releases/download/${LATEST_TAG}/sarasa-gothic-ttf-${LATEST_TAG:1}.7z -o sarasa-gothic-ttf.7z
+      - run: ls -l
+      - run: 7z x *.7z
+      - run: ls -l
+      - name: Upload Sarasa Mono TC fonts
+        uses: actions/upload-artifact@master
+        with:
+          name: Sarasa Mono TC ttf
+          path: sarasa-mono-tc-*.ttf
+
+  patch:
+    needs: prepare
+    if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        variants:
+          [
+            "regular",
+            "italic",
+            "bold",
+            "bolditalic",
+            "semibold",
+            "semibolditalic",
+            "light",
+            "lightitalic",
+            "extralight",
+            "extralightitalic",
+          ]
     env:
       NERD_FONTS_VERSION: v2.1.0
     steps:
       - uses: actions/checkout@v2
-      - name: Download latest version of Sarasa Gothic
-        run: |
-          LATEST_TAG=$(curl --silent https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r .tag_name)
-          echo Downloading Sarasa Gothic ${LATEST_TAG}
-          curl -L https://github.com/be5invis/Sarasa-Gothic/releases/download/${LATEST_TAG}/sarasa-gothic-ttf-${LATEST_TAG:1}.7z -O
-          7z x *.7z
+      - name: Download Sarasa Gothic font ${{ matrix.variants }} from artifact
+        uses: actions/download-artifact@master
+        with:
+          name: Sarasa Mono TC ttf
+      - run: ls -l
       - name: Install FontForge
         run: sudo apt install fontforge -y
       - name: Download Font Patcher
@@ -29,36 +62,72 @@ jobs:
         run: sh download-source-fonts.sh
       - name: Install configparser
         run: pip install configparser
-      - name: Patch fonts
-        run: ls sarasa-mono-tc-*.ttf | xargs -n 1 fontforge -script font-patcher --careful --complete --no-progressbars --quiet
+      - run: ls -l
+      - name: Patch font
+        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet sarasa-mono-tc-${{ matrix.variants }}.ttf
+      - run: ls -l
       - name: Rename patched font files
-        run: |
-          mv 'Sarasa Mono TC Bold Italic Nerd Font Complete.ttf'     sarasa-mono-tc-bolditalic-nerd-font.ttf
-          mv 'Sarasa Mono TC Bold Nerd Font Complete.ttf'            sarasa-mono-tc-bold-nerd-font.ttf
-          mv 'Sarasa Mono TC Italic Nerd Font Complete.ttf'          sarasa-mono-tc-italic-nerd-font.ttf
-          mv 'Sarasa Mono TC Light Italic Nerd Font Complete.ttf'    sarasa-mono-tc-lightitalic-nerd-font.ttf
-          mv 'Sarasa Mono TC Light Nerd Font Complete.ttf'           sarasa-mono-tc-light-nerd-font.ttf
-          mv 'Sarasa Mono TC Nerd Font Complete.ttf'                 sarasa-mono-tc-regular-nerd-font.ttf
-          mv 'Sarasa Mono TC Semibold Italic Nerd Font Complete.ttf' sarasa-mono-tc-semibolditalic-nerd-font.ttf
-          mv 'Sarasa Mono TC Semibold Nerd Font Complete.ttf'        sarasa-mono-tc-semibold-nerd-font.ttf
-          mv 'Sarasa Mono TC Xlight Italic Nerd Font Complete.ttf'   sarasa-mono-tc-extralightitalic-nerd-font.ttf
-          mv 'Sarasa Mono TC Xlight Nerd Font Complete.ttf'          sarasa-mono-tc-extralight-nerd-font.ttf
+        run: mv *Complete.ttf sarasa-mono-tc-${{ matrix.variants }}-nerd-font.ttf
+      - run: ls -l
+      - name: Upload patched font
+        uses: actions/upload-artifact@master
+        with:
+          name: Patched ${{ matrix.variants }} font
+          path: sarasa-mono-tc-${{ matrix.variants }}-nerd-font.ttf
+
+  zip:
+    needs: patch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched regular font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched italic font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched bold font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched bolditalic font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched semibold font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched semibolditalic font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched light font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched lightitalic font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched extralight font
+      - uses: actions/download-artifact@master
+        with:
+          name: Patched extralightitalic font
+      - run: ls -l
       - name: Zip patched font files
         run: zip -r sarasa-mono-tc-nerd-font.zip sarasa-mono-tc-*-nerd-font.ttf
-      - uses: actions/upload-artifact@master
+      - run: ls -l
+      - name: Upload zip
+        uses: actions/upload-artifact@master
         with:
           name: Sarasa Mono TC Nerd Font
           path: sarasa-mono-tc-nerd-font.zip
 
   release:
-    needs: build
+    needs: zip
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@master
+      - name: Download patched fonts
+        uses: actions/download-artifact@master
         with:
           name: Sarasa Mono TC Nerd Font
-      - run: ls -al
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -68,7 +137,7 @@ jobs:
 
   update-scoop-bucket:
     name: Update scoop bucket
-    needs: [build, release]
+    needs: release
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
