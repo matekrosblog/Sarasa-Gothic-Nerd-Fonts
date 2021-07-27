@@ -1,9 +1,9 @@
 name: Create tag if there's a new Sarasa Gothic version
 
 on:
-  # on every 12 hours
+  # runs every hour
   schedule:
-    - cron: "0 */12 * * *"
+    - cron: "0 * * * *"
   # allow manually trigger
   workflow_dispatch:
 
