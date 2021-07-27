@@ -28,7 +28,7 @@ jobs:
       - name: Install configparser
         run: pip install configparser
       - name: Patch fonts
-        run: ls -1 sarasa-mono-tc-*.ttf | xargs -I {} fontforge -script font-patcher --careful --complete --no-progressbars --quiet {}
+        run: ls sarasa-mono-tc-*.ttf | xargs -n 1 fontforge -script font-patcher --careful --complete --no-progressbars --quiet
       - name: Rename patched font files
         run: |
           mv 'Sarasa Mono TC Bold Italic Nerd Font Complete.ttf'     sarasa-mono-tc-bolditalic-nerd-font.ttf
