@@ -1,10 +1,10 @@
 {
-  "version": "0.34.0",
+  "version": "0.34.1",
   "description": "Nerd Fonts patched Sarasa Mono TC",
   "homepage": "https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font",
   "license": "OFL-1.1",
-  "url": "https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/download/v0.34.0/sarasa-mono-tc-nerd-font.zip",
-  "hash": "7d91e470acc6345e5cc4cd3c3e8601d5d5d82d2e5ebab2af944ed44acd9741f0",
+  "url": "https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/download/v0.34.1/sarasa-mono-tc-nerd-font.zip",
+  "hash": "4338dfc5b034a9d98d762b30806ad32f41559819f2d6a383b1e0782bad70d465",
   "installer": {
     "script": [
       "$fontList = \"${dir}\\list.txt\"",
