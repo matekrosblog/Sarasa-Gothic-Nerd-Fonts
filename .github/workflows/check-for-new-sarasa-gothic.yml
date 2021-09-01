@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
+    if: github.repository == 'jonz94/Sarasa-Gothic-Nerd-Font'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

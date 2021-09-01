@@ -11,7 +11,7 @@ Installation
 - Add this repo as custom scoop bucket
 
 ```
-scoop bucket add sarasa-nerd-font https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font
+scoop bucket add sarasa-nerd-font https://github.com/jonz94/Sarasa-Gothic-Nerd-Font
 ```
 
 - Then `Sarasa-Mono-TC-Nerd-Font` can be installed as a scoop app
@@ -22,12 +22,11 @@ scoop install Sarasa-Mono-TC-Nerd-Font
 
 ### Manually install
 
-Go to the [Releases page](https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases) and download the `sarasa-mono-tc-nerd-font.zip` file.
+Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/releases) and download the `sarasa-mono-tc-nerd-font.zip` file.
 
-Notable Changes
----
+## Notable Changes
 
-### [v0.32.14](https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/compare/v0.32.13...v0.32.14) - 2021-07-25
+### [v0.32.14](https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/compare/v0.32.13...v0.32.14) - 2021-07-25
 
 #### Added
 
@@ -39,4 +38,5 @@ Notable Changes
 - Check if the font is being used by any process when using `scoop` to upgrade or uninstall
 
 #### Breaking Change
+
 - The release page now provide **a single `sarasa-mono-tc-nerd-font.zip` file includes all the font variants**, instead of a `.ttf` font file named `Sarasa-Mono-TC-Nerd-Font-Complete.ttf` in previous versions (`v0.32.13` and below)

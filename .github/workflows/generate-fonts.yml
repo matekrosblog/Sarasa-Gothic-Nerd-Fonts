@@ -4,34 +4,15 @@ on:
   push:
     tags:
       - v*.*.*
-  # allow manually trigger (for manually testing purpose)
-  workflow_dispatch:
 
 jobs:
-  prepare:
-    if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download latest version of Sarasa Gothic from GitHub release page
-        run: |
-          LATEST_TAG=$(curl --silent https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r .tag_name)
-          echo Downloading Sarasa Gothic ${LATEST_TAG}
-          curl -L https://github.com/be5invis/Sarasa-Gothic/releases/download/${LATEST_TAG}/sarasa-gothic-ttf-${LATEST_TAG:1}.7z -o sarasa-gothic-ttf.7z
-      - run: ls -l
-      - run: 7z x *.7z
-      - run: ls -l
-      - name: Upload Sarasa Mono TC fonts
-        uses: actions/upload-artifact@master
-        with:
-          name: Sarasa Mono TC ttf
-          path: sarasa-mono-tc-*.ttf
-
-  patch:
-    needs: prepare
-    if: github.repository == 'jonz94/Sarasa-Mono-TC-Nerd-Font'
+  patch1:
+    if: github.repository == 'jonz94/Sarasa-Gothic-Nerd-Font'
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        styles: ["fixed", "fixed-slab", "mono", "mono-slab"]
+        orthographies: ["cl", "hc", "j", "k", "sc", "tc"]
         variants:
           [
             "regular",
@@ -49,10 +30,13 @@ jobs:
       NERD_FONTS_VERSION: v2.1.0
     steps:
       - uses: actions/checkout@v2
-      - name: Download Sarasa Gothic font ${{ matrix.variants }} from artifact
-        uses: actions/download-artifact@master
-        with:
-          name: Sarasa Mono TC ttf
+      - name: Download latest version of Sarasa Gothic from GitHub release page
+        run: |
+          LATEST_TAG=$(echo ${GITHUB_REF} | cut -d '/' -f 3)
+          echo Downloading Sarasa Gothic ${LATEST_TAG}
+          curl -L https://github.com/be5invis/Sarasa-Gothic/releases/download/${LATEST_TAG}/sarasa-gothic-ttf-${LATEST_TAG:1}.7z -o sarasa-gothic-ttf.7z
+      - run: ls -l
+      - run: 7z x *.7z
       - run: ls -l
       - name: Install FontForge
         run: sudo apt install fontforge -y
@@ -64,76 +48,291 @@ jobs:
         run: pip install configparser
       - run: ls -l
       - name: Patch font
-        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet sarasa-mono-tc-${{ matrix.variants }}.ttf
+        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}.ttf
       - run: ls -l
       - name: Rename patched font files
-        run: mv *Complete.ttf sarasa-mono-tc-${{ matrix.variants }}-nerd-font.ttf
+        run: mv *Complete.ttf sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
       - run: ls -l
       - name: Upload patched font
         uses: actions/upload-artifact@master
         with:
-          name: Patched ${{ matrix.variants }} font
-          path: sarasa-mono-tc-${{ matrix.variants }}-nerd-font.ttf
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }} font
+          path: sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
+
+  patch2:
+    if: github.repository == 'jonz94/Sarasa-Gothic-Nerd-Font'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        styles: ["term", "term-slab", "gothic", "ui"]
+        orthographies: ["cl", "hc", "j", "k", "sc", "tc"]
+        variants:
+          [
+            "regular",
+            "italic",
+            "bold",
+            "bolditalic",
+            "semibold",
+            "semibolditalic",
+            "light",
+            "lightitalic",
+            "extralight",
+            "extralightitalic",
+          ]
+    env:
+      NERD_FONTS_VERSION: v2.1.0
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download latest version of Sarasa Gothic from GitHub release page
+        run: |
+          LATEST_TAG=$(echo ${GITHUB_REF} | cut -d '/' -f 3)
+          echo Downloading Sarasa Gothic ${LATEST_TAG}
+          curl -L https://github.com/be5invis/Sarasa-Gothic/releases/download/${LATEST_TAG}/sarasa-gothic-ttf-${LATEST_TAG:1}.7z -o sarasa-gothic-ttf.7z
+      - run: ls -l
+      - run: 7z x *.7z
+      - run: ls -l
+      - name: Install FontForge
+        run: sudo apt install fontforge -y
+      - name: Download Font Patcher
+        run: curl -L https://raw.githubusercontent.com/ryanoasis/nerd-fonts/${NERD_FONTS_VERSION}/font-patcher --output font-patcher
+      - name: Download source fonts
+        run: sh download-source-fonts.sh
+      - name: Install configparser
+        run: pip install configparser
+      - run: ls -l
+      - name: Patch font
+        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}.ttf
+      - run: ls -l
+      - name: Rename patched font files
+        run: mv *Complete.ttf sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
+      - run: ls -l
+      - name: Upload patched font
+        uses: actions/upload-artifact@master
+        with:
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }} font
+          path: sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
 
   zip:
-    needs: patch
+    needs: [patch1, patch2]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        styles:
+          [
+            "fixed",
+            "fixed-slab",
+            "mono",
+            "mono-slab",
+            "term",
+            "term-slab",
+            "gothic",
+            "ui",
+          ]
+        orthographies: ["cl", "hc", "j", "k", "sc", "tc"]
     steps:
+      # start of part generated by `genereate-download-patched-fonts` script
       - uses: actions/download-artifact@master
         with:
-          name: Patched regular font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-regular font
       - uses: actions/download-artifact@master
         with:
-          name: Patched italic font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-italic font
       - uses: actions/download-artifact@master
         with:
-          name: Patched bold font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-bold font
       - uses: actions/download-artifact@master
         with:
-          name: Patched bolditalic font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-bolditalic font
       - uses: actions/download-artifact@master
         with:
-          name: Patched semibold font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-semibold font
       - uses: actions/download-artifact@master
         with:
-          name: Patched semibolditalic font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-semibolditalic font
       - uses: actions/download-artifact@master
         with:
-          name: Patched light font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-light font
       - uses: actions/download-artifact@master
         with:
-          name: Patched lightitalic font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-lightitalic font
       - uses: actions/download-artifact@master
         with:
-          name: Patched extralight font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-extralight font
       - uses: actions/download-artifact@master
         with:
-          name: Patched extralightitalic font
+          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-extralightitalic font
+      # end of part generated by `genereate-download-patched-fonts` script
+
       - run: ls -l
       - name: Zip patched font files
-        run: zip -r sarasa-mono-tc-nerd-font.zip sarasa-mono-tc-*-nerd-font.ttf
+        run: zip -r sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-nerd-font.zip sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-*-nerd-font.ttf
       - run: ls -l
       - name: Upload zip
         uses: actions/upload-artifact@master
         with:
-          name: Sarasa Mono TC Nerd Font
-          path: sarasa-mono-tc-nerd-font.zip
+          name: sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-nerd-font.zip
+          path: sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-nerd-font.zip
 
   release:
     needs: zip
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
-      - name: Download patched fonts
-        uses: actions/download-artifact@master
+      - run: ls -l
+
+      # start of part generated by `genereate-download-patched-zips` script
+      - uses: actions/download-artifact@master
         with:
-          name: Sarasa Mono TC Nerd Font
+          name: sarasa-fixed-cl-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-hc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-j-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-k-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-sc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-tc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-slab-cl-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-slab-hc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-slab-j-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-slab-k-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-slab-sc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-fixed-slab-tc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-cl-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-hc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-j-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-k-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-sc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-tc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-slab-cl-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-slab-hc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-slab-j-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-slab-k-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-slab-sc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-mono-slab-tc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-cl-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-hc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-j-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-k-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-sc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-tc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-slab-cl-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-slab-hc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-slab-j-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-slab-k-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-slab-sc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-term-slab-tc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-gothic-cl-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-gothic-hc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-gothic-j-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-gothic-k-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-gothic-sc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-gothic-tc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-ui-cl-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-ui-hc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-ui-j-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-ui-k-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-ui-sc-nerd-font.zip
+      - uses: actions/download-artifact@master
+        with:
+          name: sarasa-ui-tc-nerd-font.zip
+      # end of part generated by `genereate-download-patched-zips` script
+
+      - run: ls -l
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         with:
-          files: sarasa-mono-tc-nerd-font.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "*.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   update-scoop-bucket:
     name: Update scoop bucket
@@ -147,9 +346,9 @@ jobs:
           ref: main
       - name: Download latest sarasa-mono-tc-nerd-font.zip
         run: |
-          LATEST_TAG=$(curl --silent https://api.github.com/repos/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/latest | jq -r .tag_name)
+          LATEST_TAG=$(curl --silent https://api.github.com/repos/jonz94/Sarasa-Gothic-Nerd-Font/releases/latest | jq -r .tag_name)
           echo "Downloading sarasa-mono-tc-nerd-font.zip (tag ${LATEST_TAG})"
-          curl -L -O https://github.com/jonz94/Sarasa-Mono-TC-Nerd-Font/releases/download/${LATEST_TAG}/sarasa-mono-tc-nerd-font.zip
+          curl -L -O https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/releases/download/${LATEST_TAG}/sarasa-mono-tc-nerd-font.zip
           echo ${LATEST_TAG:1} > VERSION
       - name: update scoop bucket
         run: |
