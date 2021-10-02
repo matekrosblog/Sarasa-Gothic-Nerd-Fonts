@@ -1,10 +1,10 @@
 {
-  "version": "0.34.3",
+  "version": "0.34.4",
   "description": "Nerd Fonts patched Sarasa Mono TC",
   "homepage": "https://github.com/jonz94/Sarasa-Gothic-Nerd-Font",
   "license": "OFL-1.1",
-  "url": "https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/releases/download/v0.34.3/sarasa-mono-tc-nerd-font.zip",
-  "hash": "bdbe141694d16c07c1cbebf7be89cd4a80ce94efd249c4e268e7456d8f62c044",
+  "url": "https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/releases/download/v0.34.4/sarasa-mono-tc-nerd-font.zip",
+  "hash": "04d96ac66a21e20d30ebd5c5b91e363cc655b360325aea12f354bda0177391ba",
   "installer": {
     "script": [
       "$fontDir = if ($global) { \"${env:windir}\\Fonts\" } else { \"${HOME}\\AppData\\Local\\Microsoft\\Windows\\Fonts\" }",
