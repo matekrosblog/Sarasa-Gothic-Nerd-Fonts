@@ -1,7 +1,7 @@
-Sarasa Mono TC ⨯ Nerd Fonts
+Sarasa Gothic ⨯ Nerd Fonts
 ===
 
-This project is a modified version of [adam7/delugia-code](https://github.com/adam7/delugia-code), which utilize GitHub Actions to automatically generate [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) patched [Sarasa Mono TC font](https://github.com/be5invis/Sarasa-Gothic).
+This project is a modified version of [adam7/delugia-code](https://github.com/adam7/delugia-code), which utilize GitHub Actions to automatically generate [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) patched [Sarasa Gothic font](https://github.com/be5invis/Sarasa-Gothic).
 
 Installation
 ---
