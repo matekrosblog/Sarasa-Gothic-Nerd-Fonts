@@ -24,7 +24,18 @@ scoop install Sarasa-Mono-TC-Nerd-Font
 
 Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/releases) and download the `sarasa-mono-tc-nerd-font.zip` file.
 
-## Notable Changes
+Notable Changes
+---
+
+### [v0.34.2](https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/compare/v0.34.1...v0.34.2) - 2021-08-31
+
+#### Added
+
+- Now all the font styles (`fixed`, `fixed-slab`, `mono`, `mono-slab`, `term`, `term-slab`, `gothic`, `ui`) and orthographies (`cl`, `hc`, `j`, `k`, `sc`, `tc`) of Sarasa Mono TC is being patched
+
+#### Revert
+
+- Revert commit [5bcfd73](https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/commit/5bcfd73fa38c6a79710d157629c590e190f9fdec), which store installed fonts as list.txt instead of raw font files, because it will break scoop's rollback to previous version feature
 
 ### [v0.32.14](https://github.com/jonz94/Sarasa-Gothic-Nerd-Font/compare/v0.32.13...v0.32.14) - 2021-07-25
 
