@@ -333,33 +333,3 @@ jobs:
         with:
           artifacts: "*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
-
-  update-scoop-bucket:
-    name: Update scoop bucket
-    needs: release
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: main
-      - name: Download latest sarasa-mono-tc-nerd-font.zip
-        run: |
-          LATEST_TAG=$(curl --silent https://api.github.com/repos/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/latest | jq -r .tag_name)
-          echo "Downloading sarasa-mono-tc-nerd-font.zip (tag ${LATEST_TAG})"
-          curl -L -O https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/download/${LATEST_TAG}/sarasa-mono-tc-nerd-font.zip
-          echo ${LATEST_TAG:1} > VERSION
-      - name: update scoop bucket
-        run: |
-          OLD_VERSION=$(jq -r '.version' bucket/Sarasa-Mono-TC-Nerd-Font.json)
-          NEW_VERSION=$(cat VERSION)
-          OLD_HASH=$(jq -r '.hash' bucket/Sarasa-Mono-TC-Nerd-Font.json)
-          NEW_HASH=$(sha256sum sarasa-mono-tc-nerd-font.zip | head -c 64)
-          sed -i "s/${OLD_VERSION}/${NEW_VERSION}/g" bucket/Sarasa-Mono-TC-Nerd-Font.json
-          sed -i "s/${OLD_HASH}/${NEW_HASH}/g" bucket/Sarasa-Mono-TC-Nerd-Font.json
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add bucket/Sarasa-Mono-TC-Nerd-Font.json
-          git commit -m "🤖 ci: update bucket version to ${NEW_VERSION}"
-          git push

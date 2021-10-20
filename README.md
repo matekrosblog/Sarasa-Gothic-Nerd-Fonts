@@ -6,21 +6,21 @@ This project is a modified version of [adam7/delugia-code](https://github.com/ad
 
 ### Using [Scoop](https://scoop.sh) on Windows
 
-- Add this repo as custom scoop bucket
+- Add [scoop-sarasa-nerd-fonts](https://github.com/jonz94/scoop-sarasa-nerd-fonts) as custom scoop bucket
 
 ```
-scoop bucket add sarasa-nerd-font https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts
+scoop bucket add sarasa-nerd-fonts https://github.com/jonz94/scoop-sarasa-nerd-fonts
 ```
 
-- Then `Sarasa-Mono-TC-Nerd-Font` can be installed as a scoop app
+- Then all the variant of font can be installed as a scoop app, e.g.
 
 ```
-scoop install Sarasa-Mono-TC-Nerd-Font
+scoop install sarasa-mono-tc-nerd-font
 ```
 
 ### Manually install
 
-Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases) and download the `sarasa-mono-tc-nerd-font.zip` file.
+Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases) and download the zip file.
 
 ## Notable Changes
 
