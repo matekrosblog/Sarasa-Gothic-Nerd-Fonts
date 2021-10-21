@@ -48,3 +48,8 @@ Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/rel
 #### Breaking Change
 
 - The release page now provide **a single `sarasa-mono-tc-nerd-font.zip` file includes all the font variants**, instead of a `.ttf` font file named `Sarasa-Mono-TC-Nerd-Font-Complete.ttf` in previous versions (`v0.32.13` and below)
+
+## License
+
+- Fonts are under the [SIL Open Font License 1.1](LICENSE).
+- Code is under the [MIT License](LICENSE-for-code.txt).
