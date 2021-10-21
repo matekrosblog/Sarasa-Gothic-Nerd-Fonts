@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [HEAD](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.34.6...HEAD)
+
+### ⚠ BREAKING CHANGES
+
+- The scoop bucket part is now moving to its own repository https://github.com/jonz94/scoop-sarasa-nerd-fonts ([e918116](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/commit/e9181166332ef7d858aff69577f5c5c7bb52441c))
+
 ## [v0.34.2](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.34.1...v0.34.2) (2021-08-31)
 
 ### Features
