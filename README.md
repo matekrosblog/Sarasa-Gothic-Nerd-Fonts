@@ -1,5 +1,7 @@
 # Sarasa Gothic ⨯ Nerd Fonts
 
+![sarasa gothic original vs nerd-fonts pathced](https://i.imgur.com/49VO75Y.png)
+
 This project is a modified version of [adam7/delugia-code](https://github.com/adam7/delugia-code), which utilize GitHub Actions to automatically generate [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) patched [Sarasa Gothic font](https://github.com/be5invis/Sarasa-Gothic).
 
 ## Installation
