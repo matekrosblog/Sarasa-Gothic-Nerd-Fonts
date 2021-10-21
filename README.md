@@ -28,7 +28,7 @@ Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/rel
 
 #### Added
 
-- Now all the font styles (`fixed`, `fixed-slab`, `mono`, `mono-slab`, `term`, `term-slab`, `gothic`, `ui`) and orthographies (`cl`, `hc`, `j`, `k`, `sc`, `tc`) of Sarasa Mono TC is being patched
+- Now all the font styles (`fixed`, `fixed-slab`, `mono`, `mono-slab`, `term`, `term-slab`, `gothic`, `ui`) and orthographies (`cl`, `hc`, `j`, `k`, `sc`, `tc`) of Sarasa Gothic is being patched
 
 #### Revert
 
