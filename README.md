@@ -20,18 +20,24 @@ scoop bucket add sarasa-nerd-fonts https://github.com/jonz94/scoop-sarasa-nerd-f
 scoop install sarasa-mono-tc-nerd-font
 ```
 
-### Using [Homebrew](https://brew.sh/) on macOS
+### Using [Homebrew](https://brew.sh/)
 
-- Add [homebrew-sarasa-gothic-nerd-fonts](https://github.com/jonz94/homebrew-sarasa-gothic-nerd-fonts) as a custom tap
+- Add [homebrew-sarasa-nerd-fonts](https://github.com/jonz94/homebrew-sarasa-nerd-fonts) as a custom tap
 
-```
-brew tap jonz94/sarasa-gothic-nerd-fonts
+```bash
+brew tap jonz94/sarasa-nerd-fonts
 ```
 
 - Then all the variant of font can be installed as a brew cask, e.g.
 
-```
+```bash
 brew install sarasa-mono-tc-nerd-font
+```
+
+- Or you can do it in a one-liner!
+
+```bash
+brew install jonz94/sarasa-nerd-fonts/sarasa-mono-tc-nerd-font
 ```
 
 ### Manually install
