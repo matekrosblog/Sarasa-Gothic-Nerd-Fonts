@@ -50,5 +50,5 @@ See [CHANGELOG.md](CHANGELOG.md)
 
 ## License
 
-- Fonts are under the [SIL Open Font License 1.1](LICENSE).
-- Code is under the [MIT License](LICENSE-for-code.txt).
+- Code is under the [MIT License](LICENSE).
+- Fonts are under the [SIL Open Font License 1.1](https://github.com/be5invis/Sarasa-Gothic/blob/master/LICENSE).
