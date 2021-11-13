@@ -2,15 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
-## [HEAD](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.34.6...HEAD)
+## [HEAD](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.35.0...HEAD)
+
+## [v0.35.0](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.34.7...v0.35.0) (2021-11-08)
+
+### ✨ Features
+
+- Support [Homebrew](https://brew.sh) by creating custom homebrew tap 👉 https://github.com/jonz94/homebrew-sarasa-nerd-fonts
+
+## [v0.34.7](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.34.6...v0.34.7) (2021-10-24)
 
 ### ⚠ BREAKING CHANGES
 
-- The scoop bucket part is now moving to its own repository https://github.com/jonz94/scoop-sarasa-nerd-fonts ([e918116](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/commit/e9181166332ef7d858aff69577f5c5c7bb52441c))
+- The scoop bucket part is now moving to its own repository 👉 https://github.com/jonz94/scoop-sarasa-nerd-fonts ([e918116](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/commit/e9181166332ef7d858aff69577f5c5c7bb52441c))
 
 ## [v0.34.2](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.34.1...v0.34.2) (2021-08-31)
 
-### Features
+### ✨ Features
 
 - Now all the font styles (`fixed`, `fixed-slab`, `mono`, `mono-slab`, `term`, `term-slab`, `gothic`, `ui`) and orthographies (`cl`, `hc`, `j`, `k`, `sc`, `tc`) of Sarasa Gothic is being patched ([47c74a5](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/commit/47c74a580cbb332b81104f8db6b4c44729b6d125))
 
@@ -20,6 +28,6 @@ All notable changes to this project will be documented in this file.
 
 - The release page now provide **a single `sarasa-mono-tc-nerd-font.zip` file includes all the font variants**, instead of a `.ttf` font file named `Sarasa-Mono-TC-Nerd-Font-Complete.ttf` in previous versions (`v0.32.13` and below)
 
-### Features
+### ✨ Features
 
 - Now all the font variants (`Regular`, `Italic`, `Bold`, `Bold Italic`, `Light`, `Light Italic`, `Semibold`, `Semibold Italic`, `ExtraXlight`, `Extralight Italic`) of Sarasa Mono TC is being patched ([4cbe8b9](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/commit/4cbe8b964e618d559adcf6e9eaac9d6c0432a828))
