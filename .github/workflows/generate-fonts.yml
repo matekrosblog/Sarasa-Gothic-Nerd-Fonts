@@ -48,6 +48,8 @@ jobs:
             "extralight",
             "extralightitalic",
           ]
+    env:
+      FILENAME: "sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}"
     steps:
       - uses: actions/checkout@v2
       - name: Download latest version of Sarasa Gothic from GitHub release page
@@ -65,15 +67,35 @@ jobs:
         with:
           name: font patcher and source glyphs
       - run: tree .
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
       - name: Install configparser
         run: pip install configparser
       - run: ls -l
       - name: Patch font
-        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}.ttf
+        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet "${FILENAME}.ttf"
       - run: ls -l
       - name: Rename patched font files
-        run: mv *Complete.ttf sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
+        run: mv *Complete.ttf "${FILENAME}-nerd-font.ttf"
       - run: ls -l
+      - name: Install fonttools
+        run: pip install fonttools
+      - name: correcting xAvgCharWidth to fix alignment issue
+        run: |
+          ttx -t "OS/2" "${FILENAME}.ttf"
+          ttx -t "OS/2" "${FILENAME}-nerd-font.ttf"
+          ls -l *.ttx
+          cat "${FILENAME}.ttx"
+          cat "${FILENAME}-nerd-font.ttx"
+          origin_x_avg_char_width="$(grep xAvgCharWidth "${FILENAME}.ttx" | cut -d '"' -f 2)"
+          echo origin xAvgCharWidth is $origin_x_avg_char_width
+          sed -i "s/xAvgCharWidth\ value=\"[0-9]\+\"/xAvgCharWidth\ value=\"${origin_x_avg_char_width}\"/g" "${FILENAME}-nerd-font.ttx"
+          cat "${FILENAME}-nerd-font.ttx"
+          mv "${FILENAME}-nerd-font.ttf" "${FILENAME}-nerd-font.origin.ttf"
+          ttx -o "${FILENAME}-nerd-font.ttf" -m "${FILENAME}-nerd-font.origin.ttf" "${FILENAME}-nerd-font.ttx"
+      - name: build hdmx table to fix alignment issue
+        run: python build-hdmx-for-sarasa.py "${FILENAME}-nerd-font.ttf"
       - name: Upload patched font
         uses: actions/upload-artifact@master
         with:
@@ -100,6 +122,8 @@ jobs:
             "extralight",
             "extralightitalic",
           ]
+    env:
+      FILENAME: "sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}"
     steps:
       - uses: actions/checkout@v2
       - name: Download latest version of Sarasa Gothic from GitHub release page
@@ -117,15 +141,35 @@ jobs:
         with:
           name: font patcher and source glyphs
       - run: tree .
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
       - name: Install configparser
         run: pip install configparser
       - run: ls -l
       - name: Patch font
-        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}.ttf
+        run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet "${FILENAME}.ttf"
       - run: ls -l
       - name: Rename patched font files
-        run: mv *Complete.ttf sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
+        run: mv *Complete.ttf "${FILENAME}-nerd-font.ttf"
       - run: ls -l
+      - name: Install fonttools
+        run: pip install fonttools
+      - name: correcting xAvgCharWidth to fix alignment issue
+        run: |
+          ttx -t "OS/2" "${FILENAME}.ttf"
+          ttx -t "OS/2" "${FILENAME}-nerd-font.ttf"
+          ls -l *.ttx
+          cat "${FILENAME}.ttx"
+          cat "${FILENAME}-nerd-font.ttx"
+          origin_x_avg_char_width="$(grep xAvgCharWidth "${FILENAME}.ttx" | cut -d '"' -f 2)"
+          echo origin xAvgCharWidth is $origin_x_avg_char_width
+          sed -i "s/xAvgCharWidth\ value=\"[0-9]\+\"/xAvgCharWidth\ value=\"${origin_x_avg_char_width}\"/g" "${FILENAME}-nerd-font.ttx"
+          cat "${FILENAME}-nerd-font.ttx"
+          mv "${FILENAME}-nerd-font.ttf" "${FILENAME}-nerd-font.origin.ttf"
+          ttx -o "${FILENAME}-nerd-font.ttf" -m "${FILENAME}-nerd-font.origin.ttf" "${FILENAME}-nerd-font.ttx"
+      - name: build hdmx table to fix alignment issue
+        run: python build-hdmx-for-sarasa.py "${FILENAME}-nerd-font.ttf"
       - name: Upload patched font
         uses: actions/upload-artifact@master
         with:
