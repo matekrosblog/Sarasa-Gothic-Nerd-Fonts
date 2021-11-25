@@ -1,4 +1,4 @@
-name: Create tag if there's a new Sarasa Gothic version
+name: create tag if there's a new Sarasa Gothic version
 
 on:
   # runs every 3 hours
@@ -8,32 +8,52 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  check:
     if: github.repository == 'jonz94/Sarasa-Gothic-Nerd-Fonts'
+    runs-on: ubuntu-latest
+    outputs:
+      should-update: ${{ steps.check.outputs.should-update }}
+      latest-tag: ${{ steps.check.outputs.latest-tag }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: check
+        id: check
+        run: |
+          # get the latest tag
+          LATEST_TAG=$(curl --silent https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r .tag_name)
+
+          if [[ "${LATEST_TAG}" == "null" ]]; then
+            echo cannot get latest tag of be5invis/Sarasa-Gothic, skipping...
+            exit 1
+          fi
+
+          echo latest tag of be5invis/Sarasa-Gothic is ${LATEST_TAG}
+
+          # check if we already have a matching tag
+          if git rev-parse ${LATEST_TAG} >/dev/null 2>&1; then
+            echo ${LATEST_TAG} tag exists, do nothing.
+            echo "::set-output name=should-update::false"
+            exit 0
+          fi
+
+          echo a newer version is available
+          echo "::set-output name=should-update::true"
+          echo "::set-output name=latest-tag::${LATEST_TAG}"
+
+  tag:
+    needs: check
+    if: ${{ needs.check.outputs.should-update == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           token: ${{ secrets.WORKFLOW_PERSONAL_ACCESS_TOKEN }}
-      - name: Magic 😎
+      - name: tag
         run: |
-          # Find the latest tag
-          LATEST_TAG=$(curl --silent https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r .tag_name)
-
-          if [[ "${LATEST_TAG}" == "null" ]]; then
-            echo Cannot get latest tag of be5invis/Sarasa-Gothic, skipping...
-            exit 1
-          fi
-
-          echo Latest tag of be5invis/Sarasa-Gothic is ${LATEST_TAG}
-
-          # Check if we already have a matching tag
-          if git rev-parse ${LATEST_TAG} >/dev/null 2>&1; then
-            echo ${LATEST_TAG} tag exists, do nothing.
-            exit 0
-          fi
-
+          LATEST_TAG="${{ needs.check.outputs.latest-tag }}"
           echo ${LATEST_TAG} tag does not exist, tag it to trigger next action.
           git config user.name github-actions
           git config user.email github-actions@github.com
