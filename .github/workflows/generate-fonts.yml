@@ -8,8 +8,28 @@ on:
 concurrency: generate-fonts
 
 jobs:
-  patch1:
+  prepare:
     if: github.repository == 'jonz94/Sarasa-Gothic-Nerd-Fonts'
+    runs-on: ubuntu-latest
+    env:
+      NERD_FONTS_VERSION: v2.1.0
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Font Patcher
+        run: curl -L https://raw.githubusercontent.com/ryanoasis/nerd-fonts/${NERD_FONTS_VERSION}/font-patcher --output font-patcher
+      - name: Download source glyphs
+        run: bash download-source-glyphs.sh
+      - run: tree .
+      - name: Upload font patcher and source glyphs
+        uses: actions/upload-artifact@v2
+        with:
+          name: font patcher and source glyphs
+          path: |
+            font-patcher
+            src/glyphs/*
+
+  patch1:
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -28,8 +48,6 @@ jobs:
             "extralight",
             "extralightitalic",
           ]
-    env:
-      NERD_FONTS_VERSION: v2.1.0
     steps:
       - uses: actions/checkout@v2
       - name: Download latest version of Sarasa Gothic from GitHub release page
@@ -42,10 +60,11 @@ jobs:
       - run: ls -l
       - name: Install FontForge
         run: sudo apt install fontforge -y
-      - name: Download Font Patcher
-        run: curl -L https://raw.githubusercontent.com/ryanoasis/nerd-fonts/${NERD_FONTS_VERSION}/font-patcher --output font-patcher
-      - name: Download source fonts
-        run: sh download-source-fonts.sh
+      - name: Download font patcher and source glyphs
+        uses: actions/download-artifact@v2
+        with:
+          name: font patcher and source glyphs
+      - run: tree .
       - name: Install configparser
         run: pip install configparser
       - run: ls -l
@@ -62,7 +81,7 @@ jobs:
           path: sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
 
   patch2:
-    if: github.repository == 'jonz94/Sarasa-Gothic-Nerd-Fonts'
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -81,8 +100,6 @@ jobs:
             "extralight",
             "extralightitalic",
           ]
-    env:
-      NERD_FONTS_VERSION: v2.1.0
     steps:
       - uses: actions/checkout@v2
       - name: Download latest version of Sarasa Gothic from GitHub release page
@@ -95,10 +112,11 @@ jobs:
       - run: ls -l
       - name: Install FontForge
         run: sudo apt install fontforge -y
-      - name: Download Font Patcher
-        run: curl -L https://raw.githubusercontent.com/ryanoasis/nerd-fonts/${NERD_FONTS_VERSION}/font-patcher --output font-patcher
-      - name: Download source fonts
-        run: sh download-source-fonts.sh
+      - name: Download font patcher and source glyphs
+        uses: actions/download-artifact@v2
+        with:
+          name: font patcher and source glyphs
+      - run: tree .
       - name: Install configparser
         run: pip install configparser
       - run: ls -l
