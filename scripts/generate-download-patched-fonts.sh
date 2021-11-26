@@ -9,7 +9,7 @@ variants=("regular" "italic" "bold" "bolditalic" "semibold" "semibolditalic" "li
 
 for variant in ${variants[@]}; do
   yq e -i ".jobs.job.steps[$counter].uses = \"actions/download-artifact@master\"" $outputFile
-  yq e -i ".jobs.job.steps[$counter].with.name = \"Patched sarasa-\${{ matrix.styles }}-\${{ matrix.orthographies }}-$variant font\"" $outputFile
+  yq e -i ".jobs.job.steps[$counter].with.name = \"patched sarasa-\${{ matrix.styles }}-\${{ matrix.orthographies }}-$variant font\"" $outputFile
 
   ((counter++))
 done

@@ -7,7 +7,7 @@ $variants = "regular", "italic", "bold", "bolditalic", "semibold", "semiboldital
 
 foreach($variant in $variants) {
   $uses = '.jobs.job.steps[' + $counter + '].uses = \"actions/download-artifact@master\"'
-  $name = '.jobs.job.steps[' + $counter + '].with.name = \"Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-' + $variant + ' font\"'
+  $name = '.jobs.job.steps[' + $counter + '].with.name = \"patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-' + $variant + ' font\"'
 
   yq e -i $uses $outputFile
   yq e -i $name $outputFile

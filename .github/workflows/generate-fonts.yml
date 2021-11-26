@@ -1,4 +1,4 @@
-name: Generate Fonts
+name: generate fonts
 
 on:
   push:
@@ -15,12 +15,12 @@ jobs:
       NERD_FONTS_VERSION: v2.1.0
     steps:
       - uses: actions/checkout@v2
-      - name: Download Font Patcher
+      - name: download font patcher
         run: curl -L https://raw.githubusercontent.com/ryanoasis/nerd-fonts/${NERD_FONTS_VERSION}/font-patcher --output font-patcher
-      - name: Download source glyphs
+      - name: download source glyphs
         run: bash download-source-glyphs.sh
       - run: tree .
-      - name: Upload font patcher and source glyphs
+      - name: upload font patcher and source glyphs
         uses: actions/upload-artifact@v2
         with:
           name: font patcher and source glyphs
@@ -55,14 +55,14 @@ jobs:
       - name: Download latest version of Sarasa Gothic from GitHub release page
         run: |
           LATEST_TAG=$(echo ${GITHUB_REF} | cut -d '/' -f 3)
-          echo Downloading Sarasa Gothic ${LATEST_TAG}
+          echo downloading Sarasa Gothic ${LATEST_TAG}
           curl -L https://github.com/be5invis/Sarasa-Gothic/releases/download/${LATEST_TAG}/sarasa-gothic-ttf-${LATEST_TAG:1}.7z -o sarasa-gothic-ttf.7z
       - run: ls -l
       - run: 7z x *.7z
       - run: ls -l
-      - name: Install FontForge
+      - name: install FontForge
         run: sudo apt install fontforge -y
-      - name: Download font patcher and source glyphs
+      - name: download font patcher and source glyphs
         uses: actions/download-artifact@v2
         with:
           name: font patcher and source glyphs
@@ -70,16 +70,16 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.x"
-      - name: Install configparser
+      - name: install configparser
         run: pip install configparser
       - run: ls -l
-      - name: Patch font
+      - name: patch font
         run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet "${FILENAME}.ttf"
       - run: ls -l
-      - name: Rename patched font files
+      - name: rename patched font files
         run: mv *Complete.ttf "${FILENAME}-nerd-font.ttf"
       - run: ls -l
-      - name: Install fonttools
+      - name: install fonttools
         run: pip install fonttools
       - name: correcting xAvgCharWidth to fix alignment issue
         run: |
@@ -96,10 +96,10 @@ jobs:
           ttx -o "${FILENAME}-nerd-font.ttf" -m "${FILENAME}-nerd-font.origin.ttf" "${FILENAME}-nerd-font.ttx"
       - name: build hdmx table to fix alignment issue
         run: python build-hdmx-for-sarasa.py "${FILENAME}-nerd-font.ttf"
-      - name: Upload patched font
+      - name: upload patched font
         uses: actions/upload-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }} font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }} font
           path: sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
 
   patch2:
@@ -126,17 +126,17 @@ jobs:
       FILENAME: "sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}"
     steps:
       - uses: actions/checkout@v2
-      - name: Download latest version of Sarasa Gothic from GitHub release page
+      - name: download latest version of Sarasa Gothic from GitHub release page
         run: |
           LATEST_TAG=$(echo ${GITHUB_REF} | cut -d '/' -f 3)
-          echo Downloading Sarasa Gothic ${LATEST_TAG}
+          echo downloading Sarasa Gothic ${LATEST_TAG}
           curl -L https://github.com/be5invis/Sarasa-Gothic/releases/download/${LATEST_TAG}/sarasa-gothic-ttf-${LATEST_TAG:1}.7z -o sarasa-gothic-ttf.7z
       - run: ls -l
       - run: 7z x *.7z
       - run: ls -l
-      - name: Install FontForge
+      - name: install FontForge
         run: sudo apt install fontforge -y
-      - name: Download font patcher and source glyphs
+      - name: download font patcher and source glyphs
         uses: actions/download-artifact@v2
         with:
           name: font patcher and source glyphs
@@ -144,16 +144,16 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.x"
-      - name: Install configparser
+      - name: install configparser
         run: pip install configparser
       - run: ls -l
-      - name: Patch font
+      - name: patch font
         run: fontforge -script font-patcher --careful --complete --no-progressbars --quiet "${FILENAME}.ttf"
       - run: ls -l
-      - name: Rename patched font files
+      - name: rename patched font files
         run: mv *Complete.ttf "${FILENAME}-nerd-font.ttf"
       - run: ls -l
-      - name: Install fonttools
+      - name: install fonttools
         run: pip install fonttools
       - name: correcting xAvgCharWidth to fix alignment issue
         run: |
@@ -173,7 +173,7 @@ jobs:
       - name: Upload patched font
         uses: actions/upload-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }} font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }} font
           path: sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-${{ matrix.variants }}-nerd-font.ttf
 
   zip:
@@ -197,41 +197,41 @@ jobs:
       # start of part generated by `genereate-download-patched-fonts` script
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-regular font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-regular font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-italic font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-italic font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-bold font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-bold font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-bolditalic font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-bolditalic font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-semibold font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-semibold font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-semibolditalic font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-semibolditalic font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-light font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-light font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-lightitalic font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-lightitalic font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-extralight font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-extralight font
       - uses: actions/download-artifact@master
         with:
-          name: Patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-extralightitalic font
+          name: patched sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-extralightitalic font
       # end of part generated by `genereate-download-patched-fonts` script
 
       - run: ls -l
-      - name: Zip patched font files
+      - name: zip patched font files
         run: zip -r sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-nerd-font.zip sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-*-nerd-font.ttf
       - run: ls -l
-      - name: Upload zip
+      - name: upload zip
         uses: actions/upload-artifact@master
         with:
           name: sarasa-${{ matrix.styles }}-${{ matrix.orthographies }}-nerd-font.zip
@@ -392,7 +392,7 @@ jobs:
       # end of part generated by `genereate-download-patched-zips` script
 
       - run: ls -l
-      - name: Release
+      - name: release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "*.zip"
