@@ -8,7 +8,6 @@ counter=0
 styles=("fixed" "fixed-slab" "mono" "mono-slab" "term" "term-slab" "gothic" "ui")
 orthographies=("cl" "hc" "j" "k" "sc" "tc")
 
-
 for style in ${styles[@]}; do
   for orthography in ${orthographies[@]}; do
     yq e -i ".jobs.job.steps[$counter].uses = \"actions/download-artifact@v2\"" $outputFile

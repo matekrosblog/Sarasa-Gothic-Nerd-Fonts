@@ -3,7 +3,7 @@ name: create tag if there's a new Sarasa Gothic version
 on:
   # runs every 3 hours
   schedule:
-    - cron: "0 */3 * * *"
+    - cron: '0 */3 * * *'
   # allow manually trigger
   workflow_dispatch:
 
