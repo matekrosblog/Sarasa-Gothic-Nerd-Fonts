@@ -11,7 +11,7 @@ orthographies=("cl" "hc" "j" "k" "sc" "tc")
 
 for style in ${styles[@]}; do
   for orthography in ${orthographies[@]}; do
-    yq e -i ".jobs.job.steps[$counter].uses = \"actions/download-artifact@master\"" $outputFile
+    yq e -i ".jobs.job.steps[$counter].uses = \"actions/download-artifact@v2\"" $outputFile
     yq e -i ".jobs.job.steps[$counter].with.name = \"sarasa-$style-$orthography-nerd-font.zip\"" $outputFile
 
     ((counter++))
