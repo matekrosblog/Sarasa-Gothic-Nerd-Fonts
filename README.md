@@ -1,6 +1,6 @@
-# Sarasa Gothic ⨯ Nerd Fonts
-
 ![sarasa gothic original vs nerd-fonts pathced](https://i.imgur.com/vZVe5bG.png)
+
+# Sarasa Gothic ⨯ Nerd Fonts
 
 This project is a modified version of [adam7/delugia-code](https://github.com/adam7/delugia-code), which utilize GitHub Actions to automatically generate [Nerd fonts](https://github.com/ryanoasis/nerd-fonts) patched [Sarasa Gothic font](https://github.com/be5invis/Sarasa-Gothic).
 
@@ -43,6 +43,8 @@ brew install jonz94/sarasa-nerd-fonts/sarasa-mono-tc-nerd-font
 ### Manually install
 
 Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases) and download the zip file.
+
+## [List of TTF Font Family Name](docs/ttf-font-family-name.md)
 
 ## Notable Changes
 
