@@ -2,7 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
-## [HEAD](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.35.0...HEAD)
+## [HEAD](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.35.2...HEAD)
+
+## [v0.35.2](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.35.1...v0.35.2) (2021-11-28)
+
+### ⚠ BREAKING CHANGES
+
+- In previous version, all variants of the patched fonts have exact same TTF font family name `Sarasa Nerd Font`. Now, each variant of the patched fonts will have proper TTF font family name. See [List of TTF Font Family Name](docs/ttf-font-family-name.md) for more details.
+
+- You will need to apply changes to the font setting of the application after updating fonts to this version. For example: in order to using newer version of `sarasa-mono-tc-nerd-font.zip` in vscode, apply the following changes to vscode's `settings.json`:
+
+```diff
+-  "editor.fontFamily": "Sarasa Nerd Font",
++  "editor.fontFamily": "Sarasa Mono TC Nerd Font",
+```
+
+### ✅ Bug Fixes
+
+- Resolve font alignment issue ([145000b](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/commit/145000bf0a64ae0bf17b99e483fb40e414ef6cad)), closes [#1](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/issues/1)
+- Correct TTF font family name ([339054a](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/commit/339054a9d8c3a70d61abbe60f857031ade8cfee4)), closes [#2](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/issues/2)
 
 ## [v0.35.0](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.34.7...v0.35.0) (2021-11-08)
 
