@@ -48,9 +48,14 @@ brew install sarasa-mono-tc-nerd-font
 brew install jonz94/sarasa-nerd-fonts/sarasa-mono-tc-nerd-font
 ```
 
+### Using Shell Script on Linux
+
+- [Here](https://gist.github.com/jonz94/bf5b885e656caa88b6adbf6df93612e2) is a POSIX compliant shell script that install the fonts on Linux.
+- Feel free to customize it to suit your own needs!
+
 ### Manually install
 
-Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases) and download the zip file.
+- Go to the [Releases page](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases) and download the zip file.
 
 ## [List of TTF Font Family Name](docs/ttf-font-family-name.md)
 
