@@ -49,7 +49,6 @@ def main():
 
         elif nameID == 6:
             fontName.setName(originFontFullname, nameID, platformID, platEncID, langID)
-            pass
 
     font.save(filename)
     font.close()
