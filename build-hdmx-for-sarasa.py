@@ -20,10 +20,10 @@ def main():
 
     font = TTFont(filename, recalcBBoxes=False)
 
-    originFontHead = font["head"]
-    originFontHmtx = font["hmtx"]
+    originalFontHead = font["head"]
+    originalFontHmtx = font["hmtx"]
 
-    originFontHead.flags |= headFlagInstructionsMayAlterAdvanceWidth
+    originalFontHead.flags |= headFlagInstructionsMayAlterAdvanceWidth
 
     hdmxTable = newTable("hdmx")
     hdmxTable.hdmx = {}
@@ -32,11 +32,11 @@ def main():
     for ppem in range(
         math.floor(sarasaHintPpemMin / 2) * 2 + 1, sarasaHintPpemMax + 1, 2
     ):
-        halfUpm = originFontHead.unitsPerEm / 2
+        halfUpm = originalFontHead.unitsPerEm / 2
         halfPpem = math.ceil(ppem / 2)
         hdmxTable.hdmx[ppem] = {
             name: math.ceil(width / halfUpm) * halfPpem
-            for name, (width, _) in originFontHmtx.metrics.items()
+            for name, (width, _) in originalFontHmtx.metrics.items()
         }
 
     font["hdmx"] = hdmxTable

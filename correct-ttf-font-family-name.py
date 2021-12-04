@@ -14,9 +14,9 @@ def main():
     font = TTFont(filename, recalcBBoxes=False)
     fontName = font["name"]
 
-    originFontUniqueID = fontName.getName(3, 1, 0, 0).toUnicode()
-    originFontFullname = fontName.getName(4, 1, 0, 0).toUnicode()
-    originFontPreferredStyle = fontName.getName(17, 1, 0, 0).toUnicode()
+    originalFontUniqueID = fontName.getName(3, 1, 0, 0).toUnicode()
+    originalFontFullname = fontName.getName(4, 1, 0, 0).toUnicode()
+    originalFontPreferredStyle = fontName.getName(17, 1, 0, 0).toUnicode()
 
     for entry in fontName.names:
         nameID = entry.nameID
@@ -36,19 +36,22 @@ def main():
             fontName.setName(string, nameID, platformID, platEncID, langID)
 
         elif nameID in [1, 16]:
-            string = originFontUniqueID.replace(
-                f" {originFontPreferredStyle}", " Nerd Font"
+            string = originalFontUniqueID.replace(
+                f" {originalFontPreferredStyle}", " Nerd Font"
             )
             fontName.setName(string, nameID, platformID, platEncID, langID)
 
         elif nameID == 3:
-            string = originFontUniqueID.replace(
-                f" {originFontPreferredStyle}", f" Nerd Font {originFontPreferredStyle}"
+            string = originalFontUniqueID.replace(
+                f" {originalFontPreferredStyle}",
+                f" Nerd Font {originalFontPreferredStyle}",
             )
             fontName.setName(string, nameID, platformID, platEncID, langID)
 
         elif nameID == 6:
-            fontName.setName(originFontFullname, nameID, platformID, platEncID, langID)
+            fontName.setName(
+                originalFontFullname, nameID, platformID, platEncID, langID
+            )
 
     font.save(filename)
     font.close()
