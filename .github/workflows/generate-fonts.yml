@@ -90,7 +90,7 @@ jobs:
           cat "${FILENAME}-nerd-font.ttx"
           origin_x_avg_char_width="$(grep xAvgCharWidth "${FILENAME}.ttx" | cut -d '"' -f 2)"
           echo origin xAvgCharWidth is $origin_x_avg_char_width
-          sed -i "s/xAvgCharWidth\ value=\"[0-9]\+\"/xAvgCharWidth\ value=\"${origin_x_avg_char_width}\"/g" "${FILENAME}-nerd-font.ttx"
+          sed -i "s/xAvgCharWidth value=\"[0-9]\+\"/xAvgCharWidth value=\"${origin_x_avg_char_width}\"/g" "${FILENAME}-nerd-font.ttx"
           cat "${FILENAME}-nerd-font.ttx"
           mv "${FILENAME}-nerd-font.ttf" "${FILENAME}-nerd-font.origin.ttf"
           ttx -o "${FILENAME}-nerd-font.ttf" -m "${FILENAME}-nerd-font.origin.ttf" "${FILENAME}-nerd-font.ttx"
@@ -166,7 +166,7 @@ jobs:
           cat "${FILENAME}-nerd-font.ttx"
           origin_x_avg_char_width="$(grep xAvgCharWidth "${FILENAME}.ttx" | cut -d '"' -f 2)"
           echo origin xAvgCharWidth is $origin_x_avg_char_width
-          sed -i "s/xAvgCharWidth\ value=\"[0-9]\+\"/xAvgCharWidth\ value=\"${origin_x_avg_char_width}\"/g" "${FILENAME}-nerd-font.ttx"
+          sed -i "s/xAvgCharWidth value=\"[0-9]\+\"/xAvgCharWidth value=\"${origin_x_avg_char_width}\"/g" "${FILENAME}-nerd-font.ttx"
           cat "${FILENAME}-nerd-font.ttx"
           mv "${FILENAME}-nerd-font.ttf" "${FILENAME}-nerd-font.origin.ttf"
           ttx -o "${FILENAME}-nerd-font.ttf" -m "${FILENAME}-nerd-font.origin.ttf" "${FILENAME}-nerd-font.ttx"
