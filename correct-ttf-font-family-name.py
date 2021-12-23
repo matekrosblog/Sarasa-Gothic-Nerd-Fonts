@@ -24,7 +24,14 @@ def main():
         platEncID = entry.platEncID
         langID = entry.langID
 
-        if langID in [1028, 1041, 2052, 3076]:
+        # Windows language ID
+        # https://github.com/fonttools/fonttools/blob/4.28.5/Lib/fontTools/ttLib/tables/_n_a_m_e.py#L558-L783
+        zhTW = 0x0404
+        ja = 0x0411
+        zh = 0x0804
+        zhHK = 0x0C04
+
+        if platformID == 3 and langID in [zhTW, ja, zh, zhHK]:
             string = (
                 entry.toUnicode()
                 .replace(" CL", " CL Nerd Font")
