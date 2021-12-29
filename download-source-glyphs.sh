@@ -1,7 +1,7 @@
 #!/bin/bash
 
-mkdir -p src/glyphs
-
+NERD_FONTS_VERSION=${NERD_FONTS_VERSION:-v2.1.0}
+upstream_src_glyphs_url="https://github.com/ryanoasis/nerd-fonts/blob/${NERD_FONTS_VERSION}/src/glyphs"
 glyphs=(
   "FontAwesome.otf"
   "NerdFontsSymbols 1000 EM Nerd Font Complete Blank.sfd"
@@ -23,7 +23,7 @@ glyphs=(
   "weathericons-regular-webfont.ttf"
 )
 
-upstream_src_glyphs_url="https://github.com/ryanoasis/nerd-fonts/blob/${NERD_FONTS_VERSION:-v2.1.0}/src/glyphs"
+mkdir -p src/glyphs
 
 for glyph in "${glyphs[@]}"; do
   # replace all `whitespace` characters with `%20`
