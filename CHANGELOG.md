@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.35.2](https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/compare/v0.35.1...v0.35.2) (2021-11-28)
 
-### ⚠ BREAKING CHANGES
+### ⚠ BREAKING CHANGES / ✨ Features
 
 - In previous version, all variants of the patched fonts have exact same TTF font family name `Sarasa Nerd Font`. Now, each variant of the patched fonts will have proper TTF font family name. See [List of TTF Font Family Name](docs/ttf-font-family-name.md) for more details.
 
